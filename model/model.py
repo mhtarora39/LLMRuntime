@@ -18,6 +18,7 @@ class ModelArgs:
 
 class RMSNorm(nn.Module):
     """
+    https://arxiv.org/abs/1910.07467
     Layer norm do Re-centring (mean = 0) and Re-scaling (1 variance ) But RMSNorm do just 
     Rescaling and it doesn't needs to depends on 2 properties like mean and variance.
 
@@ -45,6 +46,7 @@ class RMSNorm(nn.Module):
     def forward(self,x):
         output = self.__norm(x.float()).type_as(x)
         return output * self.weights
+
 
 
 def LLaMA(nn.Module):
