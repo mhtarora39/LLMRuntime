@@ -17,6 +17,22 @@ class ModelArgs:
 
 
 class RMSNorm(nn.Module):
+    """
+    Layer norm do Re-centring (mean = 0) and Re-scaling (1 variance ) But RMSNorm do just 
+    Rescaling and it doesn't needs to depends on 2 properties like mean and variance.
+
+    We don't need to calculate the mean. As hypothesis just convergence is due to variance, 
+
+    RMSNorm:
+    a_i = a_i/RMS * Weights
+     
+    Where in LayerNorm:
+    needs to calculate mean and variance then make calculate layer norm : 
+    
+    Layer Norm would be 
+    a_i = Norm(a_i)*y + b where w and b are learnable
+    https://arxiv.org/abs/1607.06450
+    """
     def __init__(self, eps, dim):
         super().__init__()
         self.eps = eps
@@ -36,7 +52,7 @@ def LLaMA(nn.Module):
     def __init__(self):
         self.rms_norm_in = RMSNorm(ModelArgs.dim, ModelArgs.eps)
         self.embedding_in = nn.Embedding(ModelArgs.vocab_size, ModelArgs.dim)
-        
+
 
 
     def forward(self,x):
