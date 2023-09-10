@@ -37,7 +37,21 @@ struct TransformerWeights
     // classifier weights for the logits, no  last layer;
     Wdtype *wcls;
     void read_transformer_block(std::string model_path);
+
 };
+
+
+struct RunState {
+    Wdtype *x; //activation at current time step t (dim,)
+    Wdtype *xb; //some but inside the residual branch. (dim, )
+    Wdtype *xb2; //an additional buffer just for convenience (dim, )
+    Wdtype *hb; // buffer for hidden dimension in the FFN (hidden_dim,);
+    
+
+};
+
+
+
 
 
 
