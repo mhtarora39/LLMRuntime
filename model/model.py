@@ -1,6 +1,9 @@
 import torch
 import torch
 from torch import nn
+import numpy as np
+
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 class ModelArgs:
     # default hyper parameters for the Llama 7B model
@@ -49,6 +52,16 @@ class RMSNorm(nn.Module):
 
 
 
+def get_rotatory_embeddings(seq_len, base_value):
+
+    theta_arr  = torch.repeat_interleave(base_value**(2*torch.arange(0,seq_len//2 +1, device=DEVICE)/seq_len),2)
+    coses = torch.cos(theta_arr).reshape(1,seq_len)
+    sines = torch.sin(theta_arr).reshape(1,seq_len)
+    return  coses , sines
+
+
+
+
 def LLaMA(nn.Module):
 
     def __init__(self):
@@ -57,8 +70,9 @@ def LLaMA(nn.Module):
 
 
 
-    def forward(self,x):
-        in_emd = self.embedding_in(x)
+    def forward(self,tokens):
+        bs, seq_len = tokens.shape
+        in_emd = self.embedding_in(tokens)
         in_x = self.rms_norm_in(in_emd)
 
     
