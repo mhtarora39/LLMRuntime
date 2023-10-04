@@ -52,13 +52,15 @@ class RMSNorm(nn.Module):
 
 
 
-def get_rotatory_embeddings(seq_len, base_value):
-
-    theta_arr  = torch.repeat_interleave(base_value**(2*torch.arange(0,seq_len//2 +1, device=DEVICE)/seq_len),2)
-    coses = torch.cos(theta_arr).reshape(1,seq_len)
-    sines = torch.sin(theta_arr).reshape(1,seq_len)
+def pos_embeddings(dims,end,base_value):
+    # https://nn.labml.ai/transformers/rope/index.html
+    theta_arr  = torch.pow(theta , (-2*torch.arange(0,dims//2,device=DEVICE))/dims)
+    m_thetas = torch.arange(end,device=DEVICE)
+    freqs = torch.einsum("i,j->ij",m_thetas,theta_arr)
+    coses = torch.cos(freqs)
+    sines = torch.sin(freqs)
     return  coses , sines
-
+    
 
 
 
